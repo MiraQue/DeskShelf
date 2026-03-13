@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+
+# User data
+data/config.json
+
+# Icon cache (user-specific)
+cache/icons/
+
+# IDE
+.vscode/
+.idea/
