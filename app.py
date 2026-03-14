@@ -9,9 +9,9 @@ from PIL import Image
 from desktop_reader import scan_desktop
 from icon_extractor import get_icon, _create_default_icon
 from launcher import launch
-from config import load_config, save_config
+from config import load_config, save_config, ASSETS_DIR, CONFIG_DIR
 
-CACHE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cache", "icons")
+CACHE_DIR = os.path.join(CONFIG_DIR, "cache", "icons")
 ALL_TAG = "All"
 ICON_SIZE = 24
 ROW_HEIGHT = 26
@@ -72,7 +72,7 @@ class DeskShelfApp(ctk.CTk):
         max_w = win.get("max_width", 360)
         self.maxsize(max_w, 2000)
         # カスタムアイコン設定（タイトルバー + タスクバー）
-        ico_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "deskshelf.ico")
+        ico_path = os.path.join(ASSETS_DIR, "deskshelf.ico")
         if os.path.isfile(ico_path):
             self.after(50, lambda: self.iconbitmap(ico_path))
 

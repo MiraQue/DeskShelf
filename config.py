@@ -2,6 +2,7 @@
 
 import json
 import os
+import sys
 
 DEFAULT_CONFIG = {
     "window": {
@@ -22,8 +23,15 @@ DEFAULT_CONFIG = {
     "usage": {},   # { "item_name": {"count": N, "last": "ISO timestamp"} }
 }
 
-CONFIG_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+# ユーザーデータ: %APPDATA%/DeskShelf/ (ユーザーごとに独立)
+CONFIG_DIR = os.path.join(os.environ.get("APPDATA", os.path.expanduser("~")), "DeskShelf")
 CONFIG_PATH = os.path.join(CONFIG_DIR, "config.json")
+
+# アセット(アイコン等): PyInstaller展開先 or スクリプトディレクトリ
+if getattr(sys, "frozen", False):
+    ASSETS_DIR = os.path.join(sys._MEIPASS, "data")
+else:
+    ASSETS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
 
 def load_config() -> dict:

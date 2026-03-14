@@ -102,12 +102,13 @@ DeskShelf/
 ├── config.py            # 設定の読み書き
 ├── generate_icon.py     # アプリアイコン生成スクリプト
 ├── requirements.txt     # Python依存パッケージ
-├── data/
-│   ├── config.json      # ユーザー設定（自動生成、git管理外）
-│   ├── deskshelf.ico    # アプリアイコン（.ico）
-│   └── deskshelf.png    # アプリアイコン（.png）
-└── cache/
-    └── icons/           # 抽出したアイコンのキャッシュ（git管理外）
+└── data/
+    ├── deskshelf.ico    # アプリアイコン（.ico）
+    └── deskshelf.png    # アプリアイコン（.png）
+
+ユーザーデータ保存先: %APPDATA%\DeskShelf\
+├── config.json          # ユーザー設定（初回起動時に自動生成）
+└── cache/icons/         # 抽出したアイコンのキャッシュ
 ```
 
 ---

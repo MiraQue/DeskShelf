@@ -10,8 +10,7 @@ try:
 except Exception:
     pass
 
-# スクリプトのディレクトリを基準にする
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+# パス解決は config.py の ASSETS_DIR / CONFIG_DIR で行う
 
 from app import DeskShelfApp
 

@@ -80,12 +80,13 @@ DeskShelf/
 ├── config.py            # Settings read/write
 ├── generate_icon.py     # App icon generator
 ├── requirements.txt     # Python dependencies
-├── data/
-│   ├── config.json      # User settings (auto-created, git-ignored)
-│   ├── deskshelf.ico    # App icon (.ico)
-│   └── deskshelf.png    # App icon (.png)
-└── cache/
-    └── icons/           # Extracted icon cache (git-ignored)
+└── data/
+    ├── deskshelf.ico    # App icon (.ico)
+    └── deskshelf.png    # App icon (.png)
+
+User data: %APPDATA%\DeskShelf\
+├── config.json          # User settings (auto-created on first run)
+└── cache/icons/         # Extracted icon cache
 ```
 
 ---
