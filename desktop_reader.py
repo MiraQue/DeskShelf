@@ -89,15 +89,33 @@ def resolve_url(url_path: str) -> dict | None:
         return None
 
 
+def _collect_desktop_paths() -> list[str]:
+    """重複を除いた全デスクトップパスを返す（OneDrive + ローカル + パブリック）"""
+    paths = []
+    seen = set()
+
+    for p in [
+        get_desktop_path(),                                      # Windows API（OneDrive側になる場合あり）
+        os.path.join(os.environ["USERPROFILE"], "Desktop"),      # ローカル固定パス
+        get_public_desktop_path(),                               # パブリック
+    ]:
+        rp = os.path.normcase(os.path.realpath(p))
+        if rp not in seen and os.path.isdir(p):
+            seen.add(rp)
+            paths.append(p)
+
+    return paths
+
+
 def scan_desktop() -> list[dict]:
     """
     デスクトップ上のショートカット・実行ファイルをスキャンして一覧を返す。
-    ユーザーデスクトップとパブリックデスクトップの両方を読む。
+    OneDrive同期デスクトップ・ローカルデスクトップ・パブリックデスクトップを全て読む。
     """
     items = []
     seen_names = set()
 
-    for desktop_path in [get_desktop_path(), get_public_desktop_path()]:
+    for desktop_path in _collect_desktop_paths():
         if not os.path.isdir(desktop_path):
             continue
         for entry in os.listdir(desktop_path):
