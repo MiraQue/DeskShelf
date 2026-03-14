@@ -2,32 +2,25 @@
 
 import os
 import ctypes
-import ctypes.wintypes
 import win32com.client
 
-# SHGetKnownFolderPath で正確なデスクトップパスを取得
-# OneDrive同期環境やフォルダリダイレクトにも対応
-_SHGetKnownFolderPath = ctypes.windll.shell32.SHGetKnownFolderPath
-_CoTaskMemFree = ctypes.windll.ole32.CoTaskMemFree
-
-# KNOWNFOLDERID GUIDs
-_FOLDERID_Desktop = ctypes.c_char_p(b"\xB4\xBF\xED\x4B\x7D\x8A\x44\x4D\xBE\xEC\xE5\x69\x1B\x9C\x3B\x3C")
-_FOLDERID_PublicDesktop = ctypes.c_char_p(b"\x90\xDD\x4E\xC3\x97\x4F\xB7\x49\x84\x0D\x92\x6F\xA2\xC5\xC5\x22")
+# CSIDL定数（GUIDより確実）
+_CSIDL_DESKTOP = 0x0010           # ユーザーデスクトップ
+_CSIDL_COMMON_DESKTOP = 0x0019    # パブリックデスクトップ
 
 
-def _get_known_folder(folder_id) -> str | None:
-    path_ptr = ctypes.c_wchar_p()
-    hr = _SHGetKnownFolderPath(folder_id, 0, None, ctypes.byref(path_ptr))
-    if hr == 0 and path_ptr.value:
-        result = path_ptr.value
-        _CoTaskMemFree(path_ptr)
-        return result
+def _get_folder_path(csidl: int) -> str | None:
+    """SHGetFolderPathW でシステムフォルダのパスを取得する"""
+    buf = ctypes.create_unicode_buffer(260)
+    hr = ctypes.windll.shell32.SHGetFolderPathW(0, csidl, 0, 0, buf)
+    if hr == 0 and buf.value:
+        return buf.value
     return None
 
 
 def get_desktop_path() -> str:
     """ユーザーのデスクトップパスを取得する（OneDrive同期対応）"""
-    path = _get_known_folder(_FOLDERID_Desktop)
+    path = _get_folder_path(_CSIDL_DESKTOP)
     if path and os.path.isdir(path):
         return path
     return os.path.join(os.environ["USERPROFILE"], "Desktop")
@@ -35,7 +28,7 @@ def get_desktop_path() -> str:
 
 def get_public_desktop_path() -> str:
     """パブリックデスクトップのパスを取得する"""
-    path = _get_known_folder(_FOLDERID_PublicDesktop)
+    path = _get_folder_path(_CSIDL_COMMON_DESKTOP)
     if path and os.path.isdir(path):
         return path
     return os.path.join(os.environ["PUBLIC"], "Desktop")
