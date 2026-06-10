@@ -9,7 +9,7 @@ DEFAULT_CONFIG = {
         "x": None,
         "y": None,
         "width": 280,
-        "max_width": 500,
+        "height": 400,
         "always_on_top": True,
         "theme": "system",
         "opacity": 1.0,

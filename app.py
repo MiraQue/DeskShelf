@@ -62,15 +62,18 @@ class DeskShelfApp(ctk.CTk):
     def _setup_window(self):
         self.title("DeskShelf")
         win = self.config["window"]
-        self.geometry(f"{win.get('width', 280)}x400")
+        try:
+            w = max(200, min(int(win.get("width", 280)), 5000))
+            h = max(120, min(int(win.get("height", 400)), 5000))
+        except (TypeError, ValueError):
+            w, h = 280, 400
+        self.geometry(f"{w}x{h}")
         if win.get("always_on_top", True):
             self.attributes("-topmost", True)
         opacity = win.get("opacity", 1.0)
         if opacity < 1.0:
             self.attributes("-alpha", opacity)
         self.minsize(200, 120)
-        max_w = win.get("max_width", 360)
-        self.maxsize(max_w, 2000)
         # カスタムアイコン設定（タイトルバー + タスクバー）
         ico_path = os.path.join(ASSETS_DIR, "deskshelf.ico")
         if os.path.isfile(ico_path):
@@ -581,8 +584,8 @@ class DeskShelfApp(ctk.CTk):
         try:
             self.config["window"]["x"] = self.winfo_x()
             self.config["window"]["y"] = self.winfo_y()
-            max_w = self.config["window"].get("max_width", 500)
-            self.config["window"]["width"] = min(self.winfo_width(), max_w)
+            self.config["window"]["width"] = self.winfo_width()
+            self.config["window"]["height"] = self.winfo_height()
             save_config(self.config)
         except Exception:
             pass
